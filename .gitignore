@@ -1,0 +1,105 @@
+# ================================
+# Python
+# ================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# ================================
+# Environment / Secrets
+# ================================
+.env
+.env.*
+!.env.example
+
+# API keys / credentials
+*.key
+*.pem
+*.crt
+
+# ================================
+# IDE / Editors
+# ================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# ================================
+# OS files
+# ================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ================================
+# Testing / Coverage
+# ================================
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# ================================
+# Streamlit
+# ================================
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# ================================
+# Logs / Traces / Artifacts
+# ================================
+logs/
+*.log
+traces/
+artifacts/
+outputs/
+
+# ================================
+# Build / Distribution
+# ================================
+build/
+dist/
+*.egg-info/
+
+# ================================
+# Jupyter
+# ================================
+.ipynb_checkpoints/
+
+# ================================
+# Model / Vector / Cache data
+# ================================
+*.pkl
+*.joblib
+*.npz
+*.faiss
+*.index
+
+# ================================
+# Temp files
+# ================================
+tmp/
+temp/
+.cache/
+
+# ================================
+# Docker
+# ================================
+*.pid
+docker-compose.override.yml
+
+# ================================
+# OS-specific Python
+# ================================
+.python-version

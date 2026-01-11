@@ -1,0 +1,538 @@
+command:
+uvicorn api.main:app --host 127.0.0.1 --port 8000 --log-level debug
+
+ 
+
+Command:
+curl http://localhost:8000/health
+
+output:
+{"ok":true}
+
+
+Command:
+curl -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -H "X-API-Key: change-me" -d "{\"query\":\"OrderService is slow. What dependencies should I check first?\"}"
+
+
+output:
+{"answer":"To troubleshoot the slow performance of OrderService, check the following dependencies first:\n\n- **InventoryService**: \n  - Verify latency and circuit breaker settings.\n  - Check connection pools and thread saturation.\n\n- **PricingService**: \n  - Monitor for any recent changes that may have affected performance.\n  - Track latency and error budgets.\n\n- **MessageBus** (if applicable):\n  - Check for consumer lag and any backlog issues.\n  - Validate autoscaling settings and retry policies.\n\n### Next Steps:\n1. Monitor the performance metrics of InventoryService and PricingService.\n2. Review logs for any timeouts or errors related to these services.\n3. If MessageBus is involved, assess its health and performance metrics.","trace_id":"e8463a2d-2b12-4b50-a415-ac2cc70d3fd0","route":"hybrid","sources":[{"doc_id":"DOC-002","title":"OrderService Degradation Playbook","snippet":"OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.","score":0.32527388691844006,"metadata":{"type":"runbook","system":"OrderService"}},{"doc_id":"DOC-001","title":"Incident Response - Message Bus Backlog","snippet":"If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.","score":0.11441787373223668,"metadata":{"type":"runbook","system":"MessageBus"}},{"doc_id":"DOC-005","title":"PricingService Change Management","snippet":"PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.","score":0.0,"metadata":{"type":"procedure","system":"PricingService"}},{"doc_id":"DOC-003","title":"Data Access Policy - ProductDB","snippet":"ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.","score":0.0,"metadata":{"type":"policy","system":"ProductDB"}},{"doc_id":"DOC-004","title":"WarehouseAPI Integration Guide","snippet":"WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.","score":0.0,"metadata":{"type":"guide","system":"WarehouseAPI"}}],"metrics":{"redactions":0,"llm_latency_ms":2767,"latency_ms":3067}}
+{
+    "command": "curl -X POST http://127.0.0.1:8000/ask -H \"Content-Type: application/json\" -H \"X-API-Key: change-me\" -d \"{\\\"query\\\":\\\"OrderService is slow. What dependencies should I check first?\\\"}\"",
+    "output": {
+        "answer": "To troubleshoot the slow performance of OrderService, check the following dependencies first:\n\n- **InventoryService**: \n  - Verify latency and circuit breaker settings.\n  - Check connection pools and thread saturation.\n\n- **PricingService**: \n  - Monitor for any recent changes that may have affected performance.\n  - Track latency and error budgets.\n\n- **MessageBus** (if applicable):\n  - Check for consumer lag and any backlog issues.\n  - Validate autoscaling settings and retry policies.\n\n### Next Steps:\n1. Monitor the performance metrics of InventoryService and PricingService.\n2. Review logs for any timeouts or errors related to these services.\n3. If MessageBus is involved, assess its health and performance metrics.",
+        "trace_id": "e8463a2d-2b12-4b50-a415-ac2cc70d3fd0",
+        "route": "hybrid",
+        "sources": [
+            {
+                "doc_id": "DOC-002",
+                "title": "OrderService Degradation Playbook",
+                "snippet": "OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.",
+                "score": 0.32527388691844006,
+                "metadata": {"type": "runbook", "system": "OrderService"}
+            },
+            {
+                "doc_id": "DOC-001",
+                "title": "Incident Response - Message Bus Backlog",
+                "snippet": "If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.",
+                "score": 0.11441787373223668,
+                "metadata": {"type": "runbook", "system": "MessageBus"}
+            },
+            {
+                "doc_id": "DOC-005",
+                "title": "PricingService Change Management",
+                "snippet": "PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.",
+                "score": 0.0,
+                "metadata": {"type": "procedure", "system": "PricingService"}
+            },
+            {
+                "doc_id": "DOC-003",
+                "title": "Data Access Policy - ProductDB",
+                "snippet": "ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.",
+                "score": 0.0,
+                "metadata": {"type": "policy", "system": "ProductDB"}
+            },
+            {
+                "doc_id": "DOC-004",
+                "title": "WarehouseAPI Integration Guide",
+                "snippet": "WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.",
+                "score": 0.0,
+                "metadata": {"type": "guide", "system": "WarehouseAPI"}
+            }
+        ],
+        "metrics": {
+            "redactions": 0,
+            "llm_latency_ms": 2767,
+            "latency_ms": 3067
+        }
+    }
+}
+
+
+
+command:
+curl -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -H "X-API-Key: change-me" -d "{\"query\":\"What services are upstream and downstream of InventoryService?\"}"
+
+
+Response:
+{"answer":"**Upstream and Downstream Services of InventoryService:**\n\n- **Downstream Services:**\n  - **OrderService**: Depends on InventoryService for inventory checks and order fulfillment.\n\n- **Upstream Services:**\n  - **PricingService**: InventoryService may rely on PricingService for pricing information related to inventory items.\n\n**Troubleshooting Path:**\n- If issues arise with InventoryService:\n  - Check **OrderService** for any degradation or latency issues.\n  - Verify the connection and response times from **PricingService**.\n  - Monitor logs for any errors related to inventory queries or pricing data.","trace_id":"b31993d4-ef7c-4d8e-9196-e3899bd471c9","route":"graph_rag","sources":[{"doc_id":"DOC-002","title":"OrderService Degradation Playbook","snippet":"OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.","score":0.2531551114229024,"metadata":{"type":"runbook","system":"OrderService"}},{"doc_id":"DOC-003","title":"Data Access Policy - ProductDB","snippet":"ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.","score":0.14648392467043522,"metadata":{"type":"policy","system":"ProductDB"}},{"doc_id":"DOC-001","title":"Incident Response - Message Bus Backlog","snippet":"If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.","score":0.11292793213009794,"metadata":{"type":"runbook","system":"MessageBus"}},{"doc_id":"DOC-005","title":"PricingService Change Management","snippet":"PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.","score":0.0,"metadata":{"type":"procedure","system":"PricingService"}},{"doc_id":"DOC-004","title":"WarehouseAPI Integration Guide","snippet":"WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.","score":0.0,"metadata":{"type":"guide","system":"WarehouseAPI"}}],"metrics":{"redactions":0,"llm_latency_ms":2208,"latency_ms":2209}}
+{
+    "command": "curl -X POST http://127.0.0.1:8000/ask -H \"Content-Type: application/json\" -H \"X-API-Key: change-me\" -d \"{\\\"query\\\":\\\"What services are upstream and downstream of InventoryService?\\\"}\"",
+    "output": {
+        "answer": "**Upstream and Downstream Services of InventoryService:**\n\n- **Downstream Services:**\n  - **OrderService**: Depends on InventoryService for inventory checks and order fulfillment.\n\n- **Upstream Services:**\n  - **PricingService**: InventoryService may rely on PricingService for pricing information related to inventory items.\n\n**Troubleshooting Path:**\n- If issues arise with InventoryService:\n  - Check **OrderService** for any degradation or latency issues.\n  - Verify the connection and response times from **PricingService**.\n  - Monitor logs for any errors related to inventory queries or pricing data.",
+        "trace_id": "b31993d4-ef7c-4d8e-9196-e3899bd471c9",
+        "route": "graph_rag",
+        "sources": [
+            {
+                "doc_id": "DOC-002",
+                "title": "OrderService Degradation Playbook",
+                "snippet": "OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.",
+                "score": 0.2531551114229024,
+                "metadata": {"type": "runbook", "system": "OrderService"}
+            },
+            {
+                "doc_id": "DOC-003",
+                "title": "Data Access Policy - ProductDB",
+                "snippet": "ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.",
+                "score": 0.14648392467043522,
+                "metadata": {"type": "policy", "system": "ProductDB"}
+            },
+            {
+                "doc_id": "DOC-001",
+                "title": "Incident Response - Message Bus Backlog",
+                "snippet": "If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.",
+                "score": 0.11292793213009794,
+                "metadata": {"type": "runbook", "system": "MessageBus"}
+            },
+            {
+                "doc_id": "DOC-005",
+                "title": "PricingService Change Management",
+                "snippet": "PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.",
+                "score": 0.0,
+                "metadata": {"type": "procedure", "system": "PricingService"}
+            },
+            {
+                "doc_id": "DOC-004",
+                "title": "WarehouseAPI Integration Guide",
+                "snippet": "WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.",
+                "score": 0.0,
+                "metadata": {"type": "guide", "system": "WarehouseAPI"}
+            }
+        ],
+        "metrics": {
+            "redactions": 0,
+            "llm_latency_ms": 2208,
+            "latency_ms": 2209
+        }
+    }
+}
+
+
+Command:
+curl -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -H "X-API-Key: change-me" -d "{\"query\":\"What is the data access policy for ProductDB?\"}"
+
+Response:
+{"answer":"### Data Access Policy for ProductDB\n\n- **Access Requirement**: ProductDB access follows the principle of least privilege.\n- **Audit Requirement**: All queries made to ProductDB must be audited.\n- **Sensitive Data Handling**: Sensitive fields must not be returned in logs or sent to external services.\n\n### Next Steps for Troubleshooting (if issues arise):\n- **Check Audit Logs**: Ensure all queries are being logged as per policy.\n- **Review Access Permissions**: Verify that users have the appropriate level of access.\n- **Monitor Logs**: Confirm that sensitive fields are not being exposed in logs or external communications.","trace_id":"dc73d77d-70d8-4437-945c-88c7267623f4","route":"doc_rag","sources":[{"doc_id":"DOC-003","title":"Data Access Policy - ProductDB","snippet":"ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.","score":0.3382901333617146,"metadata":{"type":"policy","system":"ProductDB"}},{"doc_id":"DOC-001","title":"Incident Response - Message Bus Backlog","snippet":"If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.","score":0.13039794402867969,"metadata":{"type":"runbook","system":"MessageBus"}},{"doc_id":"DOC-005","title":"PricingService Change Management","snippet":"PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.","score":0.0,"metadata":{"type":"procedure","system":"PricingService"}},{"doc_id":"DOC-004","title":"WarehouseAPI Integration Guide","snippet":"WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.","score":0.0,"metadata":{"type":"guide","system":"WarehouseAPI"}},{"doc_id":"DOC-002","title":"OrderService Degradation Playbook","snippet":"OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.","score":0.0,"metadata":{"type":"runbook","system":"OrderService"}}],"metrics":{"redactions":0,"llm_latency_ms":2323,"latency_ms":2337}}
+{
+    "command": "curl -X POST http://127.0.0.1:8000/ask -H \"Content-Type: application/json\" -H \"X-API-Key: change-me\" -d \"{\\\"query\\\":\\\"What is the data access policy for ProductDB?\\\"}\"",
+    "output": {
+        "answer": "### Data Access Policy for ProductDB\n\n- **Access Requirement**: ProductDB access follows the principle of least privilege.\n- **Audit Requirement**: All queries made to ProductDB must be audited.\n- **Sensitive Data Handling**: Sensitive fields must not be returned in logs or sent to external services.\n\n### Next Steps for Troubleshooting (if issues arise):\n- **Check Audit Logs**: Ensure all queries are being logged as per policy.\n- **Review Access Permissions**: Verify that users have the appropriate level of access.\n- **Monitor Logs**: Confirm that sensitive fields are not being exposed in logs or external communications.",
+        "trace_id": "dc73d77d-70d8-4437-945c-88c7267623f4",
+        "route": "doc_rag",
+        "sources": [
+            {
+                "doc_id": "DOC-003",
+                "title": "Data Access Policy - ProductDB",
+                "snippet": "ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.",
+                "score": 0.3382901333617146,
+                "metadata": {"type": "policy", "system": "ProductDB"}
+            },
+            {
+                "doc_id": "DOC-001",
+                "title": "Incident Response - Message Bus Backlog",
+                "snippet": "If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.",
+                "score": 0.13039794402867969,
+                "metadata": {"type": "runbook", "system": "MessageBus"}
+            },
+            {
+                "doc_id": "DOC-005",
+                "title": "PricingService Change Management",
+                "snippet": "PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.",
+                "score": 0.0,
+                "metadata": {"type": "procedure", "system": "PricingService"}
+            },
+            {
+                "doc_id": "DOC-004",
+                "title": "WarehouseAPI Integration Guide",
+                "snippet": "WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.",
+                "score": 0.0,
+                "metadata": {"type": "guide", "system": "WarehouseAPI"}
+            },
+            {
+                "doc_id": "DOC-002",
+                "title": "OrderService Degradation Playbook",
+                "snippet": "OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.",
+                "score": 0.0,
+                "metadata": {"type": "runbook", "system": "OrderService"}
+            }
+        ],
+        "metrics": {
+            "redactions": 0,
+            "llm_latency_ms": 2323,
+            "latency_ms": 2337
+        }
+    }
+}
+
+
+command:
+curl -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -H "X-API-Key: change-me" -d "{\"query\":\"OrderService is timing out. What should I investigate first?\"}"
+
+
+ResponseL:
+{"answer":"To investigate the timeout issue with OrderService, follow these steps:\n\n1. **Check Dependencies**:\n   - **InventoryService**: Verify if there are any latency issues or errors when OrderService calls InventoryService.\n   - **PricingService**: Check for any recent changes or latency issues with PricingService that could affect OrderService.\n\n2. **Monitor Latency**:\n   - Use monitoring tools to assess the response times of both InventoryService and PricingService.\n\n3. **Circuit Breaker Settings**:\n   - Review the circuit breaker settings for both services to ensure they are configured correctly.\n\n4. **Connection Pools and Thread Saturation**:\n   - Check the connection pool settings for OrderService and ensure there are no thread saturation issues.\n\n5. **MessageBus**:\n   - If applicable, check for any backlog or consumer lag in the MessageBus that might affect service communication.\n\nBy following this path, you can systematically identify the root cause of the timeout issue.","trace_id":"dd4b7614-c19f-47fb-bf44-63a850af0424","route":"hybrid","sources":[{"doc_id":"DOC-002","title":"OrderService Degradation Playbook","snippet":"OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.","score":0.2531551114229024,"metadata":{"type":"runbook","system":"OrderService"}},{"doc_id":"DOC-005","title":"PricingService Change Management","snippet":"PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.","score":0.0,"metadata":{"type":"procedure","system":"PricingService"}},{"doc_id":"DOC-004","title":"WarehouseAPI Integration Guide","snippet":"WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.","score":0.0,"metadata":{"type":"guide","system":"WarehouseAPI"}},{"doc_id":"DOC-003","title":"Data Access Policy - ProductDB","snippet":"ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.","score":0.0,"metadata":{"type":"policy","system":"ProductDB"}},{"doc_id":"DOC-001","title":"Incident Response - Message Bus Backlog","snippet":"If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.","score":0.0,"metadata":{"type":"runbook","system":"MessageBus"}}],"metrics":{"redactions":0,"llm_latency_ms":3230,"latency_ms":3231}}
+{
+    "command": "curl -X POST http://127.0.0.1:8000/ask -H \"Content-Type: application/json\" -H \"X-API-Key: change-me\" -d \"{\\\"query\\\":\\\"OrderService is timing out. What should I investigate first?\\\"}\"",
+    "output": {
+        "answer": "To investigate the timeout issue with OrderService, follow these steps:\n\n1. **Check Dependencies**:\n   - **InventoryService**: Verify if there are any latency issues or errors when OrderService calls InventoryService.\n   - **PricingService**: Check for any recent changes or latency issues with PricingService that could affect OrderService.\n\n2. **Monitor Latency**:\n   - Use monitoring tools to assess the response times of both InventoryService and PricingService.\n\n3. **Circuit Breaker Settings**:\n   - Review the circuit breaker settings for both services to ensure they are configured correctly.\n\n4. **Connection Pools and Thread Saturation**:\n   - Check the connection pool settings for OrderService and ensure there are no thread saturation issues.\n\n5. **MessageBus**:\n   - If applicable, check for any backlog or consumer lag in the MessageBus that might affect service communication.\n\nBy following this path, you can systematically identify the root cause of the timeout issue.",
+        "trace_id": "dd4b7614-c19f-47fb-bf44-63a850af0424",
+        "route": "hybrid",
+        "sources": [
+            {
+                "doc_id": "DOC-002",
+                "title": "OrderService Degradation Playbook",
+                "snippet": "OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.",
+                "score": 0.2531551114229024,
+                "metadata": {"type": "runbook", "system": "OrderService"}
+            },
+            {
+                "doc_id": "DOC-005",
+                "title": "PricingService Change Management",
+                "snippet": "PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.",
+                "score": 0.0,
+                "metadata": {"type": "procedure", "system": "PricingService"}
+            },
+            {
+                "doc_id": "DOC-004",
+                "title": "WarehouseAPI Integration Guide",
+                "snippet": "WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.",
+                "score": 0.0,
+                "metadata": {"type": "guide", "system": "WarehouseAPI"}
+            },
+            {
+                "doc_id": "DOC-003",
+                "title": "Data Access Policy - ProductDB",
+                "snippet": "ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.",
+                "score": 0.0,
+                "metadata": {"type": "policy", "system": "ProductDB"}
+            },
+            {
+                "doc_id": "DOC-001",
+                "title": "Incident Response - Message Bus Backlog",
+                "snippet": "If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.",
+                "score": 0.0,
+                "metadata": {"type": "runbook", "system": "MessageBus"}
+            }
+        ],
+        "metrics": {
+            "redactions": 0,
+            "llm_latency_ms": 3230,
+            "latency_ms": 3231
+        }
+    }
+}
+
+
+command:
+curl -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -H "X-API-Key: change-me" -d "{\"query\":\"Does ProductDB store passwords or secrets?\"}"
+
+{
+    "answer": "- **ProductDB does not store passwords or secrets**: The context does not indicate any storage of sensitive information like passwords or secrets.\n- **Data Access Policy**: It emphasizes least privilege access and auditing of queries, suggesting a focus on security and data integrity rather than storing sensitive information.\n\n### Next Steps:\n- **Verify with DataPlatform**: Confirm with the DataPlatform owner if there are any exceptions or specific configurations regarding sensitive data handling.\n- **Check Audit Logs**: Review audit logs for any queries related to sensitive fields to ensure compliance with the Data Access Policy.",
+    "trace_id": "e595ff8d-0718-48b3-86a7-aeb6ad1639bb",
+    "route": "hybrid",
+    "sources": [
+        {
+            "doc_id": "DOC-003",
+            "title": "Data Access Policy - ProductDB",
+            "snippet": "ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.",
+            "score": 0.29296784934087045,
+            "metadata": {
+                "type": "policy",
+                "system": "ProductDB"
+            }
+        },
+        {
+            "doc_id": "DOC-005",
+            "title": "PricingService Change Management",
+            "snippet": "PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.",
+            "score": 0.0,
+            "metadata": {
+                "type": "procedure",
+                "system": "PricingService"
+            }
+        },
+        {
+            "doc_id": "DOC-004",
+            "title": "WarehouseAPI Integration Guide",
+            "snippet": "WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.",
+            "score": 0.0,
+            "metadata": {
+                "type": "guide",
+                "system": "WarehouseAPI"
+            }
+        },
+        {
+            "doc_id": "DOC-002",
+            "title": "OrderService Degradation Playbook",
+            "snippet": "OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.",
+            "score": 0.0,
+            "metadata": {
+                "type": "runbook",
+                "system": "OrderService"
+            }
+        },
+        {
+            "doc_id": "DOC-001",
+            "title": "Incident Response - Message Bus Backlog",
+            "snippet": "If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.",
+            "score": 0.0,
+            "metadata": {
+                "type": "runbook",
+                "system": "MessageBus"
+            }
+        }
+    ],
+    "metrics": {
+        "redactions": 0,
+        "llm_latency_ms": 2300,
+        "latency_ms": 2301
+    }
+}
+
+
+
+command:
+pytest -q
+
+
+response:
+.                              [100%]
+1 passed in 1.94s
+
+
+Command:
+python -c "from evaluation.runner import run_cases; print(run_cases('evaluation/test_cases.yaml'))"
+
+Respond:
+[{'id': 'case-001', 'answer': 'MOCK RESPONSE (offline mode). Using retrieved context:\n\nDependency view:\n- MessageBus (type=infra, owner=Platform, tier=infra)\n- OrderService (type=service, owner=SupplyOps, tier=app)\n- PricingService (type=service, owner=FinanceIT, tier=app)\n- ProductDB (type=data, owner=DataPlatform, tier=data)\n- InventoryService (type=service, owner=SupplyOps, tier=app)\n\nKey retrieved guidance:\n- [DOC-002] OrderService Degradation Playbook: OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.\n- [DOC-001] Incident Response - Message Bus Backlog: If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.\n- [DOC-005] PricingService Change Management: PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.\n\nAction plan:\n- Verify upstream/downstream dependencies and error rates.\n- Follow the most relevant runbook/policy from retrieved docs.\n- Capture trace_id and latency for observability.\n', 'route': 'hybrid', 'metrics': {'redactions': 0, 'latency_ms': 0}}, {'id': 'case-002', 'answer': 'MOCK RESPONSE (offline mode). Using retrieved context:\n\nDependency view:\n- MessageBus (type=infra, owner=Platform, tier=infra)\n- OrderService (type=service, owner=SupplyOps, tier=app)\n- PricingService (type=service, owner=FinanceIT, tier=app)\n- ProductDB (type=data, owner=DataPlatform, tier=data)\n- InventoryService (type=service, owner=SupplyOps, tier=app)\n\nKey retrieved guidance:\n- [DOC-001] Incident Response - Message Bus Backlog: If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.\n- [DOC-005] PricingService Change Management: PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.\n- [DOC-004] WarehouseAPI Integration Guide: WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.\n\nAction plan:\n- Verify upstream/downstream dependencies and error rates.\n- Follow the most relevant runbook/policy from retrieved docs.\n- Capture trace_id and latency for observability.\n', 'route': 'hybrid', 'metrics': {'redactions': 0, 'latency_ms': 0}}, {'id': 'case-003', 'answer': 'MOCK RESPONSE (offline mode). Using retrieved context:\n\nKey retrieved guidance:\n- [DOC-003] Data Access Policy - ProductDB: ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.\n- [DOC-001] Incident Response - Message Bus Backlog: If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.\n- [DOC-005] PricingService Change Management: PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.\n\nAction plan:\n- Verify upstream/downstream dependencies and error rates.\n- Follow the most relevant runbook/policy from retrieved docs.\n- Capture trace_id and latency for observability.\n', 'route': 'doc_rag', 'metrics': {'redactions': 0, 'latency_ms': 0}}]
+[
+    {
+        "id": "case-001",
+        "answer": "MOCK RESPONSE (offline mode). Using retrieved context:\n\nDependency view:\n- MessageBus (type=infra, owner=Platform, tier=infra)\n- OrderService (type=service, owner=SupplyOps, tier=app)\n- PricingService (type=service, owner=FinanceIT, tier=app)\n- ProductDB (type=data, owner=DataPlatform, tier=data)\n- InventoryService (type=service, owner=SupplyOps, tier=app)\n\nKey retrieved guidance:\n- [DOC-002] OrderService Degradation Playbook: OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.\n- [DOC-001] Incident Response - Message Bus Backlog: If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.\n- [DOC-005] PricingService Change Management: PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.\n\nAction plan:\n- Verify upstream/downstream dependencies and error rates.\n- Follow the most relevant runbook/policy from retrieved docs.\n- Capture trace_id and latency for observability.",
+        "route": "hybrid",
+        "metrics": {
+            "redactions": 0,
+            "latency_ms": 0
+        }
+    },
+    {
+        "id": "case-002",
+        "answer": "MOCK RESPONSE (offline mode). Using retrieved context:\n\nDependency view:\n- MessageBus (type=infra, owner=Platform, tier=infra)\n- OrderService (type=service, owner=SupplyOps, tier=app)\n- PricingService (type=service, owner=FinanceIT, tier=app)\n- ProductDB (type=data, owner=DataPlatform, tier=data)\n- InventoryService (type=service, owner=SupplyOps, tier=app)\n\nKey retrieved guidance:\n- [DOC-001] Incident Response - Message Bus Backlog: If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.\n- [DOC-005] PricingService Change Management: PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.\n- [DOC-004] WarehouseAPI Integration Guide: WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.\n\nAction plan:\n- Verify upstream/downstream dependencies and error rates.\n- Follow the most relevant runbook/policy from retrieved docs.\n- Capture trace_id and latency for observability.",
+        "route": "hybrid",
+        "metrics": {
+            "redactions": 0,
+            "latency_ms": 0
+        }
+    },
+    {
+        "id": "case-003",
+        "answer": "MOCK RESPONSE (offline mode). Using retrieved context:\n\nKey retrieved guidance:\n- [DOC-003] Data Access Policy - ProductDB: ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.\n- [DOC-001] Incident Response - Message Bus Backlog: If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.\n- [DOC-005] PricingService Change Management: PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.\n\nAction plan:\n- Verify upstream/downstream dependencies and error rates.\n- Follow the most relevant runbook/policy from retrieved docs.\n- Capture trace_id and latency for observability.",
+        "route": "doc_rag",
+        "metrics": {
+            "redactions": 0,
+            "latency_ms": 0
+        }
+    }
+]
+
+
+
+command: (PROVIDER=mock)
+curl -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -H "X-API-Key: change-me" -d "{\"query\":\"MessageBus backlog is increasing. What should I do?\"}"
+
+response:
+{"answer":"MOCK RESPONSE (offline mode). Using retrieved context:\n\nDependency view:\n- PricingService (type=service, owner=FinanceIT, tier=app)\n- WarehouseAPI (type=external, owner=3PL, tier=external)\n- ProductDB (type=data, owner=DataPlatform, tier=data)\n- MessageBus (type=infra, owner=Platform, tier=infra)\n- OrderService (type=service, owner=SupplyOps, tier=app)\n\nKey retrieved guidance:\n- [DOC-001] Incident Response - Message Bus Backlog: If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.\n- [DOC-005] PricingService Change Management: PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.\n- [DOC-004] WarehouseAPI Integration Guide: WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.\n\nAction plan:\n- Verify upstream/downstream dependencies and error rates.\n- Follow the most relevant runbook/policy from retrieved docs.\n- Capture trace_id and latency for observability.\n","trace_id":"eb27c893-6bd3-4d6f-91c8-2ce6f8227237","route":"hybrid","sources":[{"doc_id":"DOC-001","title":"Incident Response - Message Bus Backlog","snippet":"If MessageBus backlog increases: check consumer lag, autoscaling settings, dead-letter queues, and upstream publish rate. Validate retry policy and monitor broker CPU and disk.","score":0.31940842637826583,"metadata":{"type":"runbook","system":"MessageBus"}},{"doc_id":"DOC-005","title":"PricingService Change Management","snippet":"PricingService changes require approval and rollout via CI/CD. Canary deployments are recommended. Track latency and error budgets.","score":0.0,"metadata":{"type":"procedure","system":"PricingService"}},{"doc_id":"DOC-004","title":"WarehouseAPI Integration Guide","snippet":"WarehouseAPI is an external 3PL endpoint. Use exponential backoff, idempotency keys, and failover routing. Monitor 4xx/5xx rate.","score":0.0,"metadata":{"type":"guide","system":"WarehouseAPI"}},{"doc_id":"DOC-003","title":"Data Access Policy - ProductDB","snippet":"ProductDB access requires least privilege. All queries must be audited. Sensitive fields must not be returned to logs or external services.","score":0.0,"metadata":{"type":"policy","system":"ProductDB"}},{"doc_id":"DOC-002","title":"OrderService Degradation Playbook","snippet":"OrderService depends on InventoryService and PricingService. If timeouts occur, verify downstream latency and circuit breaker settings. Check connection pools and thread saturation.","score":0.0,"metadata":{"type":"runbook","system":"OrderService"}}],"metrics":{"redactions":0,"latency_ms":1}}
+{
+    "timestamp": "2024-01-XX",
+    "api_endpoint": "http://127.0.0.1:8000",
+    "test_cases": [
+        {
+            "name": "Health Check",
+            "method": "GET",
+            "path": "/health",
+            "response": {
+                "ok": true
+            }
+        },
+        {
+            "name": "OrderService Performance",
+            "method": "POST",
+            "path": "/ask",
+            "headers": {
+                "Content-Type": "application/json",
+                "X-API-Key": "change-me"
+            },
+            "query": "OrderService is slow. What dependencies should I check first?",
+            "response": {
+                "trace_id": "e8463a2d-2b12-4b50-a415-ac2cc70d3fd0",
+                "route": "hybrid",
+                "metrics": {
+                    "llm_latency_ms": 2767,
+                    "latency_ms": 3067
+                }
+            }
+        },
+        {
+            "name": "InventoryService Dependencies",
+            "method": "POST",
+            "path": "/ask",
+            "query": "What services are upstream and downstream of InventoryService?",
+            "response": {
+                "trace_id": "b31993d4-ef7c-4d8e-9196-e3899bd471c9",
+                "route": "graph_rag"
+            }
+        },
+        {
+            "name": "ProductDB Access Policy",
+            "method": "POST",
+            "path": "/ask",
+            "query": "What is the data access policy for ProductDB?",
+            "response": {
+                "trace_id": "dc73d77d-70d8-4437-945c-88c7267623f4",
+                "route": "doc_rag"
+            }
+        },
+        {
+            "name": "MessageBus Backlog",
+            "method": "POST",
+            "path": "/ask",
+            "query": "MessageBus backlog is increasing. What should I do?",
+            "response": {
+                "trace_id": "eb27c893-6bd3-4d6f-91c8-2ce6f8227237",
+                "route": "hybrid",
+                "latency_ms": 1
+            }
+        }
+    ]
+}
+
+
+Try out the Redaction rules/routine in isolation:
+Commaand:
+python -c "from agents.guardrails import apply_guardrails; from api.telemetry import Trace; ctx={'docs':[{'doc_id':'DOC-X','title':'t','snippet':'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 api_key=sk_live_1234 password=Secret123 4111 1111 1111 1111'}]}; t=Trace(); out=apply_guardrails('test', ctx, t); print(out['docs'][0]['snippet']); print(t.metrics); print(t.events[-1])"
+
+Response:
+[REDACTED] api_key=[REDACTED] password=[REDACTED] [REDACTED]
+{'redactions': 4, 'blocked': 0}
+{'name': 'guardrails_applied', 'ts': 1767968248.9009798, 'redactions': 4, 'hits_by_rule': {'api_key_assignment': 2, 'bearer_token': 1, 'credit_card_like': 1}, 'blocked': False}
+{
+    "timestamp": "2024-01-XX",
+    "api_endpoint": "http://127.0.0.1:8000",
+    "test_cases": [
+        {
+            "name": "Health Check",
+            "method": "GET",
+            "path": "/health",
+            "response": {
+                "ok": true
+            }
+        },
+        {
+            "name": "OrderService Performance",
+            "method": "POST",
+            "path": "/ask",
+            "headers": {
+                "Content-Type": "application/json",
+                "X-API-Key": "change-me"
+            },
+            "query": "OrderService is slow. What dependencies should I check first?",
+            "response": {
+                "trace_id": "e8463a2d-2b12-4b50-a415-ac2cc70d3fd0",
+                "route": "hybrid",
+                "metrics": {
+                    "llm_latency_ms": 2767,
+                    "latency_ms": 3067
+                }
+            }
+        },
+        {
+            "name": "InventoryService Dependencies",
+            "method": "POST",
+            "path": "/ask",
+            "query": "What services are upstream and downstream of InventoryService?",
+            "response": {
+                "trace_id": "b31993d4-ef7c-4d8e-9196-e3899bd471c9",
+                "route": "graph_rag"
+            }
+        },
+        {
+            "name": "ProductDB Access Policy",
+            "method": "POST",
+            "path": "/ask",
+            "query": "What is the data access policy for ProductDB?",
+            "response": {
+                "trace_id": "dc73d77d-70d8-4437-945c-88c7267623f4",
+                "route": "doc_rag"
+            }
+        },
+        {
+            "name": "MessageBus Backlog",
+            "method": "POST",
+            "path": "/ask",
+            "query": "MessageBus backlog is increasing. What should I do?",
+            "response": {
+                "trace_id": "eb27c893-6bd3-4d6f-91c8-2ce6f8227237",
+                "route": "hybrid",
+                "latency_ms": 1
+            }
+        },
+        {
+            "name": "Guardrails Redaction",
+            "description": "Test redaction rules in isolation",
+            "metrics": {
+                "redactions": 4,
+                "blocked": 0
+            },
+            "hits_by_rule": {
+                "api_key_assignment": 2,
+                "bearer_token": 1,
+                "credit_card_like": 1
+            }
+        }
+    ]
+}
+
+
+Direct testing of the guadrail configured
+runing direct in cmd...
+python
+Python 3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+>>>
+>>> from agents.guardrails import apply_guardrails
+>>> from api.telemetry import Trace
+>>> t = Trace()
+>>> ctx = {"docs": [{"snippet": "password=Secret123 Authorization: Bearer abc.def.ghi"}], "context_text": "api_key=sk_live_123"}
+>>> out = apply_guardrails("My api_key=sk_live_999 is failing", ctx, t)
+>>> print(out["query"])
+My api_key=[REDACTED] is failing
+>>> print(out["context"]["docs"][0]["snippet"])
+password=[REDACTED] [REDACTED]
+>>> print(out["context"]["context_text"])
+api_key=[REDACTED]
+>>> print(t.metrics)
+{'redactions': 4, 'blocked': 0}
+>>> print(t.events[-1])
+{'name': 'guardrails_applied', 'ts': 1768058992.5538392, 'redactions': 4, 'hits_by_rule': {'api_key_assignment': 3, 'bearer_token': 1}, 'blocked': False}
+>>>
+>>> exit()

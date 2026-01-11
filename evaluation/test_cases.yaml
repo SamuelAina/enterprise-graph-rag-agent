@@ -1,0 +1,23 @@
+- id: case-001
+  query: "OrderService is slow. What dependencies should I check first?"
+  must_include:
+    - "InventoryService"
+    - "PricingService"
+
+- id: case-002
+  query: "We have MessageBus backlog increasing. What should we do?"
+  must_include:
+    - "consumer"
+    - "backlog"
+
+- id: case-003
+  query: "What is the policy for ProductDB access?"
+  must_include:
+    - "least privilege"
+    - "audited"
+
+- id: case-004
+  query: "OrderService failing. api_key=sk_live_123 Authorization: Bearer abc.def.ghi"
+  expect_redaction: true
+  min_overall: 0.5
+
