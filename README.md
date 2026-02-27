@@ -2,6 +2,17 @@
 
 Enterprise-grade Generative AI system combining Graph-RAG, Hybrid Retrieval, Deterministic Reranking, Governance Guardrails, Evaluation (LLMOps), and Observability, with a full Streamlit demo UI and FastAPI service.
 
+## Recruiter TL;DR
+**What this demonstrates:** production-style GenAI backend engineering — routing, hybrid retrieval, deterministic testing, governance guardrails, and observability.
+
+- **Backend:** FastAPI service + API-key auth
+- **Product demo:** Streamlit UI
+- **RAG:** Graph-RAG + vector Doc-RAG + Hybrid router
+- **Quality:** deterministic reranking + pytest evaluation harness
+- **Governance:** PII/secret redaction + optional blocking + audit events
+- **Ops:** structured traces + metrics (latency/tokens/redactions)
+
+
 This project demonstrates how to build production-ready GenAI systems, not just prototypes.
 
 ## 🚀 Key Capabilities
@@ -121,7 +132,7 @@ enterprise-graph-rag-agent/
 # ⚙️ Setup & Installation
 ## 1️⃣ Clone & Install
 ```
-git clone https://github.com/your-org/enterprise-graph-rag-agent.git
+git clone https://github.com/SamuelAina/enterprise-graph-rag-agent.git
 cd enterprise-graph-rag-agent
 python -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
@@ -152,13 +163,7 @@ API_BASE_URL=http://127.0.0.1:8000
 ```
 
 ## ▶️ Running the System
-### Option A — Streamlit Demo (Recommended)
-
-```bash
-streamlit run streamlit_app.py
-```
-
-### Option A — Streamlit Demo (Recommended)
+### Option A — Streamlit Demo 
 
 ```bash
 streamlit run streamlit_app.py
@@ -187,23 +192,7 @@ curl -X POST http://127.0.0.1:8000/ask \
   -d '{"query":"OrderService is slow. What dependencies should I check first?"}'
 ```
 
-## Option B — FastAPI Service
-```
-uvicorn api.main:app --host 127.0.0.1 --port 8000
-```
 
-Health check:
-```
-curl http://127.0.0.1:8000/health
-```
-
-Ask endpoint:
-```
-curl -X POST http://127.0.0.1:8000/ask \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: change-me" \
-  -d '{"query":"OrderService is slow. What dependencies should I check first?"}'
-```
 
 # 🧪 Evaluation & Testing (LLMOps)
 Run automated evaluation
@@ -272,7 +261,7 @@ This repo demonstrates real enterprise GenAI engineering, including:
 - Token-level cost tracking
 
 # 📜 License
-MIT 
+MIT LICENSE
 
 ✉️ Contact
 - samuel.aina@gmail.com
